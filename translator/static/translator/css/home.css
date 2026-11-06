@@ -1,0 +1,209 @@
+/* Viva La Vida — translator homepage shell */
+
+:root {
+  --bg: #020f0a;
+  --card: #06170f;
+  --border: rgba(140, 255, 170, 0.14);
+  --text: #e9fff3;
+  --muted: #84a392;
+  --dim: #55705f;
+  --neon: #b6ff3c;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-brand: 'Caveat', 'Segoe Script', 'Brush Script MT', cursive;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body.home-page {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.home-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+.home-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.home-brand-name {
+  font-family: var(--font-brand);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--neon);
+  text-shadow: 0 0 26px rgba(182, 255, 60, 0.22);
+}
+
+.home-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-actions form {
+  margin: 0;
+}
+
+.home-chip {
+  padding: 4px 10px;
+  font-size: 11.5px;
+  color: #d7ffb0;
+  background: rgba(182, 255, 60, 0.08);
+  border: 1px solid rgba(182, 255, 60, 0.22);
+  border-radius: 999px;
+}
+
+.home-chip--guest {
+  color: var(--muted);
+  background: transparent;
+  border-color: var(--border);
+}
+
+.home-link-btn {
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #cfe9d9;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.home-link-btn:hover {
+  background: rgba(140, 255, 170, 0.06);
+  border-color: rgba(140, 255, 170, 0.3);
+}
+
+.home-link-btn--accent {
+  color: #04170c;
+  font-weight: 600;
+  background: var(--neon);
+  border-color: var(--neon);
+}
+
+.home-link-btn--accent:hover {
+  background: #c8ff63;
+  border-color: #c8ff63;
+}
+
+.home-link-btn:focus-visible,
+.home-brand:focus-visible {
+  outline: 2px solid #c8ff63;
+  outline-offset: 2px;
+}
+
+.home-main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+  text-align: center;
+}
+
+.home-eyebrow {
+  margin: 0 0 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--neon);
+}
+
+.home-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.home-copy {
+  margin: 10px auto 0;
+  max-width: 420px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.home-panel {
+  margin-top: 28px;
+  padding: 32px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.home-panel-icon {
+  font-size: 30px;
+}
+
+.home-panel-title {
+  margin: 10px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.home-panel-note {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.home-alerts {
+  margin: 0 auto 22px;
+  max-width: 380px;
+}
+
+.home-alert {
+  margin: 0 0 10px;
+  padding: 9px 12px;
+  font-size: 11.5px;
+  color: #d7ffb0;
+  background: rgba(182, 255, 60, 0.09);
+  border: 1px solid rgba(182, 255, 60, 0.26);
+  border-radius: 9px;
+}
+
+.home-alert--error {
+  color: #ffc0c0;
+  background: rgba(255, 120, 120, 0.08);
+  border-color: rgba(255, 120, 120, 0.24);
+}
+
+@media (max-width: 520px) {
+  .home-header {
+    padding: 16px;
+  }
+
+  .home-main {
+    padding: 32px 16px 48px;
+  }
+
+  .home-title {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#020F0A">
+  <title>{% block title %}Viva La Vida{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%89%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'translator/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'translator/css/navigation.css' %}">
+  <link rel="stylesheet" href="{% static 'translator/css/home.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <header class="app-header">
+    <a class="app-brand" href="{% url 'translator:home' %}">
+      <svg class="app-watermelon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 7c-1.5 0-2.5.8-2.5 2 0 1 .7 1.8 1.7 2.1C11.4 12 12 12.8 12 13.5c0-.7-.6-1.5-1.7-2.1C11.3 9.8 12 9 12 7Z"/>
+        <path d="M8.5 8.5c-1 .5-1.8 1.3-2 2.4 0 1 .6 1.7 1.5 2.1.9.4 1.8.6 2.7.6 1.3 0 2.4-.5 2.9-1.4.5-.8.6-1.8.3-2.7-.3-.9-.9-1.6-1.7-2.1-.8-.5-1.7-.8-2.7-.8-1.5 0-2.7.8-2.9 1.9-.2.9-.1 1.8.4 2.5.5.7 1.3 1.1 2.2 1.1 1.3 0 2.4-.6 2.9-1.5.5-.8.6-1.8.3-2.7-.3-.9-.9-1.6-1.8-2.1-.9-.5-1.8-.9-2.9-.9-1.3 0-2.4.5-2.8 1.3-.4.9-.2 1.8.4 2.5.4.7 1.1 1.1 1.9 1.1 1.2 0 2.2-.6 2.6-1.5.4-.8.5-1.8.2-2.7-.3-.9-.8-1.7-1.6-2.3-.8-.6-1.8-1-2.9-1-1.1 0-2.1.4-2.7.9-.6.5-1 1.1-1.3 1.8-.3.7-.1 1.4.4 2 .5.6 1.3 1 2.2 1 1 .0 1.9-.4 2.6-1.1.7-.7 1-1.5 1-2.4 0-.8-.5-1.5-1.3-1.9Z"/>
+      </svg>
+      <span class="app-brand-name">viva la vida</span>
+    </a>
+
+    <button class="app-hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="app-nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="7" x2="20" y2="7"/>
+        <line x1="4" y1="12" x2="20" y2="12"/>
+        <line x1="4" y1="17" x2="20" y2="17"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="app-sheet-backdrop" id="app-sheet-backdrop"></div>
+
+  <nav class="app-nav" id="app-nav" aria-label="Main navigation">
+    <ul>
+      <li class="app-nav-item app-nav-item--active"><a href="{% url 'translator:home' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Home</a></li>
+      <li class="app-nav-item"><a href="{% url 'translator:practice' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H7v12Z"/><path d="M9 11h6M9 15h6"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg>Practice</a></li>
+      <li class="app-nav-item"><a href="{% url 'translator:dictionary' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="18" r="1.6" fill="currentColor" stroke="none"/></svg>Dictionary</a></li>
+      <li class="app-nav-item"><a href="{% url 'translator:profile' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 0 16 0"/></svg>Profile</a></li>
+    </ul>
+  </nav>
+
+  <div class="app-sheet" id="app-sheet" aria-hidden="true" role="dialog" aria-label="Main menu">
+    <ul>
+      <li class="app-sheet-item app-sheet-item--active"><a href="{% url 'translator:home' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Home</a></li>
+      <li class="app-sheet-item"><a href="{% url 'translator:practice' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H7v12Z"/><path d="M9 11h6M9 15h6"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg>Practice</a></li>
+      <li class="app-sheet-item"><a href="{% url 'translator:dictionary' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="18" r="1.6" fill="currentColor" stroke="none"/></svg>Dictionary</a></li>
+      <li class="app-sheet-item"><a href="{% url 'translator:profile' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 0 16 0"/></svg>Profile</a></li>
+      <li class="app-sheet-item app-sheet-item--danger"><form method="post" action="{% url 'translator:logout' %}">{% csrf_token %}<button type="submit"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Sign out</button></form></li>
+    </ul>
+  </div>
+
+  <main class="app-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <nav class="app-bottomnav" aria-label="Primary">
+    <ul>
+      <li class="app-bottomnav-item app-bottomnav-item--active"><a href="{% url 'translator:home' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Home</a></li>
+      <li class="app-bottomnav-item"><a href="{% url 'translator:practice' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H7v12Z"/><path d="M9 11h6M9 15h6"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg>Practice</a></li>
+      <li class="app-bottomnav-item"><a href="{% url 'translator:dictionary' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="8" cy="18" r="1.6" fill="currentColor" stroke="none"/></svg>Dictionary</a></li>
+      <li class="app-bottomnav-item"><a href="{% url 'translator:profile' %}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 0 16 0"/></svg>Profile</a></li>
+    </ul>
+  </nav>
+
+  <script src="{% static 'translator/js/navigation.js' %}" defer></script>
+  <script src="{% static 'translator/js/home.js' %}" defer></script>
+  <script src="{% static 'translator/js/camera.js' %}" defer></script>
+  <script src="{% static 'translator/js/hand_detection.js' %}" defer></script>
+  <script src="{% static 'translator/js/sign_recognition.js' %}" defer></script>
+  <script src="{% static 'translator/js/recognition.js' %}" defer></script>
+  <script src="{% static 'translator/js/speech.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
