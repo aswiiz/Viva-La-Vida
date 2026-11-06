@@ -1,0 +1,98 @@
+{% extends 'translator/auth.html' %}
+
+{% block title %}Sign up · Viva La Vida{% endblock %}
+{% block heading %}Create your account{% endblock %}
+{% block subtitle %}New here? Create an account to get started{% endblock %}
+
+{% block form %}
+<form class="auth-form" method="post" action="{% url 'translator:signup' %}" novalidate data-auth-form data-mode="signup">
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+  <div class="field">
+    <label for="username">Username</label>
+    <input
+      type="text"
+      id="username"
+      name="username"
+      value="{{ username }}"
+      placeholder="Your username"
+      autocomplete="username"
+      autocapitalize="none"
+      spellcheck="false"
+      maxlength="150"
+      required
+      {% if errors.username %}class="is-invalid" aria-invalid="true"{% endif %}
+      aria-describedby="username-error">
+    <p class="field-error" id="username-error" data-error-for="username" role="alert">{{ errors.username }}</p>
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <div class="password-wrap">
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="At least 6 characters"
+        autocomplete="new-password"
+        minlength="6"
+        required
+        {% if errors.password %}class="is-invalid" aria-invalid="true"{% endif %}
+        aria-describedby="password-error">
+      <button type="button" class="password-toggle" data-toggle-password="password"
+              aria-label="Show password" aria-pressed="false">
+        <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.2 12s3.6-6.3 9.8-6.3S21.8 12 21.8 12s-3.6 6.3-9.8 6.3S2.2 12 2.2 12Z"/>
+          <circle cx="12" cy="12" r="2.9"/>
+        </svg>
+        <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+          <path d="M10.6 6.1A9.6 9.6 0 0 1 12 6c6.2 0 9.8 6 9.8 6a17 17 0 0 1-2.6 3.3M6.4 7.8A16.7 16.7 0 0 0 2.2 12s3.6 6 9.8 6a9.7 9.7 0 0 0 4-.9"/>
+          <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+          <path d="M3 3l18 18"/>
+        </svg>
+      </button>
+    </div>
+    <p class="field-error" id="password-error" data-error-for="password" role="alert">{{ errors.password }}</p>
+  </div>
+
+  <div class="field">
+    <label for="confirm_password">Confirm password</label>
+    <input
+      type="password"
+      id="confirm_password"
+      name="confirm_password"
+      placeholder="Repeat your password"
+      autocomplete="new-password"
+      minlength="6"
+      required
+      {% if errors.confirm_password %}class="is-invalid" aria-invalid="true"{% endif %}
+      aria-describedby="confirm-password-error">
+    <p class="field-error" id="confirm-password-error" data-error-for="confirm_password" role="alert">{{ errors.confirm_password }}</p>
+  </div>
+
+  <button type="submit" class="btn btn-primary" data-loading-label="Creating account…">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M15 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/>
+      <circle cx="9" cy="7.4" r="3.4"/>
+      <path d="M18.5 7.5v5M16 10h5"/>
+    </svg>
+    <span class="btn-label">Create account</span>
+    <span class="btn-spinner" aria-hidden="true"></span>
+  </button>
+</form>
+
+<form class="auth-guest" method="post" action="{% url 'translator:guest' %}">
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  <button type="submit" class="btn btn-secondary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 20v-1.8a3.6 3.6 0 0 0-3.6-3.6H8.6A3.6 3.6 0 0 0 5 18.2V20"/>
+      <circle cx="12" cy="7.6" r="3.6"/>
+    </svg>
+    <span>Continue as guest</span>
+  </button>
+</form>
+{% endblock %}
+
+{% block switch %}Already have an account? <a href="{% url 'translator:signin' %}">Sign in</a>{% endblock %}

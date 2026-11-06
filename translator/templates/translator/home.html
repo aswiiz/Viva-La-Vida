@@ -1,0 +1,70 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#020F0A">
+  <title>Viva La Vida · ISL Translator</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%89%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'translator/css/home.css' %}">
+</head>
+<body class="home-page">
+  <header class="home-header">
+    <a class="home-brand" href="{% url 'translator:home' %}">
+      <span aria-hidden="true">🍉</span>
+      <span class="home-brand-name">viva la vida</span>
+    </a>
+
+    <nav class="home-actions" aria-label="Account">
+      {% if user.is_authenticated %}
+        <span class="home-chip">@{{ user.username }}</span>
+        <form method="post" action="{% url 'translator:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="home-link-btn">Sign out</button>
+        </form>
+      {% elif is_guest %}
+        <span class="home-chip home-chip--guest">Guest</span>
+        <a class="home-link-btn" href="{% url 'translator:signin' %}">Sign in</a>
+      {% else %}
+        <a class="home-link-btn" href="{% url 'translator:signin' %}">Sign in</a>
+        <a class="home-link-btn home-link-btn--accent" href="{% url 'translator:signup' %}">Create account</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="home-main">
+    {% if messages %}
+      <div class="home-alerts">
+        {% for message in messages %}
+          <p class="home-alert home-alert--{{ message.tags|default:'info' }}" role="status">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <p class="home-eyebrow">Indian Sign Language Translator</p>
+    <h1 class="home-title">
+      {% if user.is_authenticated %}Hello, {{ user.username }}{% elif is_guest %}Hello, guest{% else %}Welcome to Viva La Vida{% endif %}
+    </h1>
+    <p class="home-copy">
+      Translate Indian Sign Language gestures into text and speech — all in one calm, focused workspace.
+    </p>
+
+    <section class="home-panel" aria-label="Translator workspace">
+      <span class="home-panel-icon" aria-hidden="true">🤟</span>
+      <p class="home-panel-title">Translator workspace</p>
+      <p class="home-panel-note">
+        {% if user.is_authenticated %}
+          You are signed in — your session is saved on this device.
+        {% elif is_guest %}
+          Guest mode: you can look around without an account.
+        {% else %}
+          Sign in or continue as a guest from the sign-in page.
+        {% endif %}
+      </p>
+    </section>
+  </main>
+</body>
+</html>

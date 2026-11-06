@@ -1,0 +1,85 @@
+{% extends 'translator/auth.html' %}
+
+{% block title %}Sign in · Viva La Vida{% endblock %}
+{% block heading %}Sign in to your account{% endblock %}
+{% block subtitle %}Welcome back! Sign in to continue{% endblock %}
+
+{% block form %}
+<form class="auth-form" method="post" action="{% url 'translator:signin' %}" novalidate data-auth-form data-mode="signin">
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+  {% if errors.form %}
+    <p class="auth-alert auth-alert--error" role="alert" data-form-error>{{ errors.form }}</p>
+  {% endif %}
+
+  <div class="field">
+    <label for="username">Username</label>
+    <input
+      type="text"
+      id="username"
+      name="username"
+      value="{{ username }}"
+      placeholder="Your username"
+      autocomplete="username"
+      autocapitalize="none"
+      spellcheck="false"
+      maxlength="150"
+      required
+      {% if errors.username %}class="is-invalid" aria-invalid="true"{% endif %}
+      aria-describedby="username-error">
+    <p class="field-error" id="username-error" data-error-for="username" role="alert">{{ errors.username }}</p>
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <div class="password-wrap">
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+        {% if errors.password %}class="is-invalid" aria-invalid="true"{% endif %}
+        aria-describedby="password-error">
+      <button type="button" class="password-toggle" data-toggle-password="password"
+              aria-label="Show password" aria-pressed="false">
+        <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.2 12s3.6-6.3 9.8-6.3S21.8 12 21.8 12s-3.6 6.3-9.8 6.3S2.2 12 2.2 12Z"/>
+          <circle cx="12" cy="12" r="2.9"/>
+        </svg>
+        <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+          <path d="M10.6 6.1A9.6 9.6 0 0 1 12 6c6.2 0 9.8 6 9.8 6a17 17 0 0 1-2.6 3.3M6.4 7.8A16.7 16.7 0 0 0 2.2 12s3.6 6 9.8 6a9.7 9.7 0 0 0 4-.9"/>
+          <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+          <path d="M3 3l18 18"/>
+        </svg>
+      </button>
+    </div>
+    <p class="field-error" id="password-error" data-error-for="password" role="alert">{{ errors.password }}</p>
+  </div>
+
+  <button type="submit" class="btn btn-primary" data-loading-label="Signing in…">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14 3h4.4A2.6 2.6 0 0 1 21 5.6v12.8a2.6 2.6 0 0 1-2.6 2.6H14"/>
+      <path d="M9.5 16.5 14.5 12 9.5 7.5M14.5 12H3.4"/>
+    </svg>
+    <span class="btn-label">Sign in</span>
+    <span class="btn-spinner" aria-hidden="true"></span>
+  </button>
+</form>
+
+<form class="auth-guest" method="post" action="{% url 'translator:guest' %}">
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  <button type="submit" class="btn btn-secondary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 20v-1.8a3.6 3.6 0 0 0-3.6-3.6H8.6A3.6 3.6 0 0 0 5 18.2V20"/>
+      <circle cx="12" cy="7.6" r="3.6"/>
+    </svg>
+    <span>Continue as guest</span>
+  </button>
+</form>
+{% endblock %}
+
+{% block switch %}Don't have an account? <a href="{% url 'translator:signup' %}">Sign up</a>{% endblock %}
