@@ -66,5 +66,97 @@
       </p>
     </section>
   </main>
+
+  <div class="camera-card">
+    <div class="camera-wrap">
+      <video class="camera-preview" playsinline autoplay muted></video>
+      <div class="camera-hold">
+        <span class="camera-hold-icon" aria-hidden="true">🍉</span>
+        <span class="camera-hold-title">Camera access required</span>
+        <p class="camera-hold-note">Allow camera access so we can read your hand signs — video never leaves your device.</p>
+        <button type="button" class="camera-hold-button" data-action="camera">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.2 12s3.6-6.3 9.8-6.3S21.8 12 21.8 12s-3.6 6.3-9.8 6.3S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.9"/></svg>
+          Enable Camera
+        </button>
+      </div>
+      <div class="detection-overlay">
+        <canvas class="hand-landmarks" width="1600" height="900" aria-hidden="true"></canvas>
+        <div class="hand-frame"></div>
+        <div class="detection-hint">
+          <span class="detection-hint-icon" aria-hidden="true">🍉</span>
+          <p class="detection-hint-text">Place your hand inside the frame and press Enable Camera to begin detection.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-mt-20">
+      <div class="detection-card">
+        <div class="detection-row">
+          <span class="detection-row__label">Detected sign</span>
+          <span class="detection-row__value detection-row__value--initial" data-detected="label">—</span>
+        </div>
+
+        <div class="detection-row">
+          <span class="detection-row__label">Confidence</span>
+          <span class="detection-row__value">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-mt-16">
+      <div class="confidence-card">
+        <div class="confidence-row">
+          <span class="confidence-row__label">Confidence</span>
+          <span class="confidence-row__value" id="confidence-value">0%</span>
+        </div>
+        <div class="confidence-track">
+          <div class="confidence-fill" style="width: 0%;"></div>
+        </div>
+        <p class="confidence-note">Recognition is not configured. The frontend shows <strong>Not configured</strong> until a trained model is connected.</p>
+      </div>
+    </div>
+
+    <div class="app-mt-16">
+      <div class="sentence-card">
+        <div class="sentence-card__head">
+          <h3 class="sentence-card__title">Your Sentence</h3>
+          <button type="button" class="sentence-card__clear" data-action="clear">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <span>Clear all</span>
+          </button>
+        </div>
+        <ul class="sentence-list"></ul>
+      </div>
+    </div>
+
+    <div class="app-mt-16">
+      <div class="control-row">
+        <button type="button" class="control-btn" data-action="speak">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="control-label">Speak</span>
+          <span class="control-sub">Text-to-speech</span>
+        </button>
+        <button type="button" class="control-btn" data-action="pause">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+          <span class="control-label">Pause camera</span>
+          <span class="control-sub">Resume later</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="app-mt-16">
+      <div class="tips-card">
+        <div class="tips-card__head">
+          <span class="tips-card__icon" aria-hidden="true">💡</span>
+          <div class="tips-card__content">
+            <p class="tips-card__title">Tips</p>
+            <p class="tips-card__note">Keep your hand within the frame. Try Hello 👋, Peace ✌️, 👍 or 👌.</p>
+          </div>
+        </div>
+        <div class="tips-card__mascot" aria-hidden="true">🍉</div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
