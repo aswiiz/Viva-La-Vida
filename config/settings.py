@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,21 @@ SECRET_KEY = 'django-insecure-*w5#7e5pd%9*3)7*h(k3msq2-!x1jqz#rl^5^_dneu2v)uolkx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Comma-separated hosts, e.g. "localhost,127.0.0.1,[::1],my-preview.example.com".
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        'DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,[::1]'
+    ).split(',')
+    if host.strip()
+]
+
+# Comma-separated origins allowed to POST (needed behind an HTTPS preview proxy).
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origin.strip()
+]
 
 
 # Application definition
@@ -37,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'translator',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 6},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -115,6 +132,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Authentication redirects
+LOGIN_URL = 'translator:signin'
+LOGIN_REDIRECT_URL = 'translator:home'
+LOGOUT_REDIRECT_URL = 'translator:signin'
 
 
 # Email
