@@ -21,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*w5#7e5pd%9*3)7*h(k3msq2-!x1jqz#rl^5^_dneu2v)uolkx'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '').strip()
+if not SECRET_KEY:
+    SECRET_KEY = 'django-insecure-dev-only-change-me-in-production-8f4c3b2a1e9d7f6g5h4j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').strip().lower() == 'true'
 
-# Comma-separated hosts, e.g. "localhost,127.0.0.1,[::1],my-preview.example.com".
+# Allowed request hosts: Render sets this to the app's .onrender.com URL; the
+# default keeps local development working.
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
@@ -35,7 +38,7 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
-# Comma-separated origins allowed to POST (needed behind an HTTPS preview proxy).
+# Origins allowed to POST (needed behind an HTTPS reverse proxy / Render).
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
@@ -90,14 +93,41 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
+        # Render sets DATABASE_URL; fall back to SQLite for local development.
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'viva_la_vida'),
+        'USER': os.environ.get('DJANGO_DATABASE_USER', ''),
+
+        # https://docs.djangoproject.com/en/6.1/ref/settings/#password
+        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DJANGO_DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DJANGO_DATABASE_PORT', '5432'),
+    }
+}
+if not os.environ.get('DJANGO_DATABASE_URL'):
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+
 
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
+
+# Production security toggles (only enabled when DJANGO_SECURE=true).
+# Set to true in Render/PaaS deployments behind HTTPS.
+if os.environ.get('DJANGO_SECURE', 'False').strip().lower() == 'true':
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -131,7 +161,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Directory from which collectstatic (Render, Heroku, gunicorn) serves files.
+# Django refuses to collect when this is unset.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Extra directories with static assets to collect (local dev).
+STATICFILES_DIRS = [
+    BASE_DIR / 'translator/static',
+]
+
 
 # Authentication redirects
 LOGIN_URL = 'translator:signin'

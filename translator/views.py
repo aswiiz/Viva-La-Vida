@@ -24,12 +24,25 @@ def _safe_next(request, fallback):
 
 
 def home(request):
-    """Translator homepage. Reachable by signed-in users and guests."""
+    """Translator homepage.
+
+    Authenticated users and guests see the full workspace (camera demo access
+    screen). Everyone else is redirected to Sign In, which is the website's
+    initial page for non-authenticated visitors.
+    """
+    is_authenticated = request.user.is_authenticated
+    is_guest = bool(request.session.get('is_guest', False))
+
+    if not is_authenticated and not is_guest:
+        # Redirect to the auth page for the initial page load.
+        redirect_to = request.GET.get('next') or reverse('translator:signin')
+        return redirect(_safe_next(request, redirect_to))
+
     return render(
         request,
         'translator/home.html',
         {
-            'is_guest': request.session.get('is_guest', False),
+            'is_guest': is_guest,
             'next': request.GET.get('next', ''),
         },
     )
