@@ -151,6 +151,39 @@
     }
   }
 
+  function exportLandmarks() {
+    var canvas = els.handCanvas;
+    if (!canvas) {
+      return null;
+    }
+    var ctx = canvas.getContext('2d');
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var data = imageData.data;
+    var points = [];
+    var w = canvas.width;
+    var h = canvas.height;
+    var total = 0;
+    for (var j = 0; j < data.length; j += 4) {
+      var r = data[j];
+      var g = data[j + 1];
+      var b = data[j + 2];
+      if (r > 90 && g > 200 && b > 90) {
+        var col = j / 4;
+        points.push({
+          x: (col % w) / w,
+          y: Math.floor(col / w) / h,
+          z: 0.0
+        });
+        total++;
+        if (total >= 21) break;
+      }
+    }
+    if (points.length >= 21) {
+      return points.slice(0, 21);
+    }
+    return null;
+  }
+
   function init() {
     els = {
       handCanvas: document.querySelector('.hand-landmarks'),
@@ -168,6 +201,14 @@
       }
       return;
     }
+  }
+
+  // Expose for the recognition pipeline.
+  if (typeof window !== 'undefined') {
+    window.__vivaLaVidaHandDetection = {
+      exportLandmarks: exportLandmarks,
+      modelLoaded: function () { return state.modelLoaded; },
+    };
   }
 
   if (typeof window !== 'undefined') {

@@ -7,5 +7,24 @@
   <h1>Practice</h1>
   <p class="page-sub">Sign along with the camera and improve your ISL phrases.</p>
 </div>
-<p class="page-placeholder">Practice page — the full list of exercises opens here.</p>
+
+<section class="app-card" style="padding:20px;">
+  <p class="page-placeholder">
+    The practice workspace is available on the homepage. Open <strong>Home</strong>
+    and use the camera to sign. Recognized signs appear in your sentence and in
+    the <em>Recognition history</em> section below.
+  </p>
+</section>
+
+<section class="app-card" style="padding:20px;margin-top:16px;">
+  <h2 style="margin-top:0;color:var(--text);font-size:16px;">Recognition history</h2>
+  <p class="page-sub" style="margin-top:0;">Your latest recognised signs.</p>
+  <ul class="sentence-list" style="max-height:200px;">
+    {% for item in profile.recognition_history.all|slice:":5" %}
+      <li style="display:inline;margin-right:6px;">{{ item.label }} ({{ item.confidence|floatformat:0 }}%)</li>
+    {% empty %}
+      <li class="page-placeholder" style="margin:0;">No recognitions yet. Start a practice session to build your history.</li>
+    {% endfor %}
+  </ul>
+</section>
 {% endblock %}

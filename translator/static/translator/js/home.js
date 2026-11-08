@@ -3,9 +3,26 @@
   'use strict';
 
   var SENTENCE_STORAGE_KEY = 'viva-la-vida:sentence:';
+  var RECOGNITION_API_URL = '/api/recognize/';
   var DEFAULT_THRESHOLD = 0.75;
   var DEFAULT_STABLE_DURATION = 600;
   var DEFAULT_COOLDOWN = 1000;
+  var CSRF_TOKEN = null;
+
+  var state = {
+    stream: null,
+    processing: false,
+    paused: false,
+    handVisible: false,
+    lastPrediction: '',
+    lastPredictionTime: 0,
+    awaitingRecognition: false,
+    recognitionTimer: null,
+    cooldownTimer: null,
+    notificationCount: 0,
+    isGuest: false,
+    recognitionInFlight: false,
+  };
 
   var state = {
     stream: null,
@@ -43,7 +60,7 @@
 
   function setSentence(items) {
     try {
-      localStorage.setItem(SENTENCE_KEY, JSON.stringify(items));
+      localStorage.setItem(SENTENCE_STORAGE_KEY, JSON.stringify(items));
     } catch (err) {
       console.error('Failed to save sentence storage', err);
     }
@@ -222,6 +239,77 @@
     if (els.pauseBtn) {
       els.pauseBtn.addEventListener('click', togglePause);
     }
+  }
+
+  function loadCsrfToken() {
+    return new Promise(function (resolve) {
+      var tokenEl = document.querySelector('meta[name="csrf-token"]');
+      if (tokenEl) {
+        resolve(tokenEl.getAttribute('content'));
+        return;
+      }
+      var cookieStart = document.cookie.indexOf('csrftoken=');
+      if (cookieStart !== -1) {
+        var end = document.cookie.indexOf(';', cookieStart);
+        if (end === -1) end = document.cookie.length;
+        resolve(decodeURIComponent(document.cookie.slice(cookieStart + 10, end)));
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  function sendLandmarks(landmarks) {
+    if (state.recognitionInFlight) {
+      return;
+    }
+    state.recognitionInFlight = true;
+    var token = CSRF_TOKEN || null;
+    fetch(RECOGNITION_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ landmarks: landmarks }),
+      credentials: 'same-origin',
+    })
+      .then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
+      .then(function (result) {
+        state.recognitionInFlight = false;
+        if (!result.ok) {
+          console.warn('Recognition API error:', result.data);
+          return;
+        }
+        var label = result.data.label || '—';
+        var confidence = result.data.confidence || 0;
+        if (label === '—') {
+          return;
+        }
+        if (label !== state.lastPrediction) {
+          state.lastPrediction = label;
+          showDetectedSign(label, confidence);
+          updateConfidence(confidence);
+          if (window.__vivaLaVidaSpeech && !state.isGuest) {
+            window.__vivaLaVidaSpeech.speak(label);
+          }
+          if (window.__vivaLaVidaRecognition) {
+            window.__vivaLaVidaRecognition.onRecognized(label, confidence);
+          }
+        }
+      })
+      .catch(function (err) {
+        state.recognitionInFlight = false;
+        console.error('Recognition fetch failed', err);
+      });
+  }
+
+  function bindToggle(el, onChange) {
+    if (!el) {
+      return;
+    }
+    el.addEventListener('change', function () {
+      onChange(el.checked);
+    });
   }
 
   function togglePause() {
@@ -516,6 +604,30 @@
     });
 
     initCameraUI();
+    loadCsrfToken().then(function (token) {
+      CSRF_TOKEN = token;
+    });
+
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      window.addEventListener('pagehide', stopCamera);
+      window.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (state.stream && !state.paused) {
+            stopHandProcessing();
+            if (els.cameraStatus) {
+              els.cameraStatus.classList.add('camera-status--paused');
+              els.cameraStatus.setAttribute('data-state', 'paused');
+            }
+          }
+        } else {
+          if (state.stream && state.paused) {
+            resumeCamera();
+          } else {
+            startCamera();
+          }
+        }
+      });
+    }
 
     if (typeof window !== 'undefined' && window.addEventListener) {
       window.addEventListener('pagehide', stopCamera);
@@ -557,6 +669,13 @@
         return;
       }
       drawLandmarks(els.landmarksData);
+      // Request recognition every 3rd frame.
+      if ((state.recognitionFrameCounter || 0) % 3 === 0) {
+        state.recognitionFrameCounter = 0;
+        sendRecognition();
+      } else {
+        state.recognitionFrameCounter++;
+      }
     }, 30);
   }
 
@@ -565,6 +684,7 @@
       clearInterval(state.handCanvasLoop);
       state.handCanvasLoop = null;
     }
+    state.recognitionFrameCounter = 0;
   }
 
   function startCameraLoopOnce() {
@@ -694,6 +814,45 @@
     if (els.handFrame) {
       els.handFrame.classList.remove('u-hidden');
     }
+  }
+
+  function captureLandmarksForRecognition() {
+    if (!els.handCanvas) {
+      return null;
+    }
+    var ctx = els.handCanvas.getContext('2d');
+    var w = els.handCanvas.width;
+    var h = els.handCanvas.height;
+    var imageData = ctx.getImageData(0, 0, w, h);
+    var data = imageData.data;
+    var points = [];
+    var total = 0;
+    for (var i = 0; i < data.length; i += 4) {
+      var r = data[i];
+      var g = data[i + 1];
+      var b = data[i + 2];
+      if (r > 120 && g > 200 && b > 120) {
+        var x = (i % 4 === 0) ? i / 4 : points.length;
+        // Map RGB to normalized coordinates (placeholder for landmark JSON)
+        points.push({
+          x: Math.random(),
+          y: Math.random(),
+          z: 0.0
+        });
+      }
+    }
+    if (points.length >= 21) {
+      return points.slice(0, 21);
+    }
+    return null;
+  }
+
+  function sendRecognition() {
+    var landmarks = captureLandmarksForRecognition();
+    if (!landmarks) {
+      return;
+    }
+    sendLandmarks(landmarks);
   }
 
   function showDetectionOverlay() {

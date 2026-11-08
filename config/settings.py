@@ -30,8 +30,7 @@ DEBUG = os.environ.get(
 # default keeps local development working.
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get(
-        "DJANGO_ALLOWED_HOSTS",
+    for host in os.environ.get(    "DJANGO_ALLOWED_HOSTS",
         "viva-la-vida-1.onrender.com,localhost,127.0.0.1,[::1]"
     ).split(",")
     if host.strip()
@@ -40,8 +39,7 @@ ALLOWED_HOSTS = [
 # Origins allowed to POST (needed behind an HTTPS reverse proxy / Render).
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
-    for origin in os.environ.get(
-        "DJANGO_CSRF_TRUSTED_ORIGINS",
+    for origin in os.environ.get(    "DJANGO_CSRF_TRUSTED_ORIGINS",
         "https://viva-la-vida-1.onrender.com"
     ).split(",")
     if origin.strip()
@@ -65,8 +63,8 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # WhiteNoise middleware must be placed immediately after SecurityMiddleware.
 MIDDLEWARE = [
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -77,7 +75,6 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = "config.urls"
-
 
 TEMPLATES = [
     {
@@ -96,14 +93,13 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 DATABASE_URL = os.environ.get(
-    "DJANGO_DATABASE_URL",
+    "DJANGO_DATABASE_URL", 
     ""
 ).strip()
 
@@ -114,23 +110,23 @@ if DATABASE_URL:
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": os.environ.get(
-                "DJANGO_DATABASE_NAME",
+                "DJANGO_DATABASE_NAME", 
                 "viva_la_vida"
             ),
             "USER": os.environ.get(
-                "DJANGO_DATABASE_USER",
+                "DJANGO_DATABASE_USER", 
                 ""
             ),
             "PASSWORD": os.environ.get(
-                "DJANGO_DATABASE_PASSWORD",
+                "DJANGO_DATABASE_PASSWORD", 
                 ""
             ),
             "HOST": os.environ.get(
-                "DJANGO_DATABASE_HOST",
+                "DJANGO_DATABASE_HOST", 
                 ""
             ),
             "PORT": os.environ.get(
-                "DJANGO_DATABASE_PORT",
+                "DJANGO_DATABASE_PORT", 
                 "5432"
             ),
             "CONN_MAX_AGE": 600,
@@ -235,10 +231,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Production security toggles (only enabled when DJANGO_SECURE=true).
 # Set to true in Render/PaaS deployments behind HTTPS.
 if os.environ.get(
-    "DJANGO_SECURE",
+    "DJANGO_SECURE", 
     "False"
 ).strip().lower() == "true":
-
+    
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
@@ -248,7 +244,7 @@ if os.environ.get(
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
     SECURE_PROXY_SSL_HEADER = (
-        "HTTP_X_FORWARDED_PROTO",
+        "HTTP_X_FORWARDED_PROTO", 
         "https"
     )
     SECURE_REFERRER_POLICY = "same-origin"

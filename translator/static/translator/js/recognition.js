@@ -37,11 +37,17 @@
     return state.ready;
   }
 
+  function onRecognized(label, confidence) {
+    // Override hook that the homepage calls after a successful remote
+    // recognition. Default no-op; the homepage wires its own behaviour.
+  }
+
   if (typeof window !== 'undefined') {
     window.__vivaLaVidaRecognition = {
       load: load,
       predict: predict,
       isReady: isReady,
+      onRecognized: onRecognized,
       state: state,
     };
   }

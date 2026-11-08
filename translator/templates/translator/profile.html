@@ -7,5 +7,104 @@
   <h1>Profile</h1>
   <p class="page-sub">Your account, your settings, your translation history.</p>
 </div>
-<p class="page-placeholder">Profile page — signed-in account details and preferences appear here.</p>
+
+<main style="max-width:560px;">
+  <section class="app-card" style="padding:20px;">
+    <h2 style="margin-top:0;color:var(--text);font-size:16px;">Account details</h2>
+    <p class="page-sub" style="margin-top:0;">Signed in as <strong>{{ profile.user.username }}</strong>.</p>
+
+    <form method="post" action="{% url 'translator:profile_update' %}" style="margin-top:14px;">
+      {% csrf_token %}
+      <div class="field" style="margin-bottom:12px;">
+        <label for="bio" style="display:block;margin-bottom:6px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7e9c8c;">Bio</label>
+        <input
+          type="text"
+          id="bio"
+          name="bio"
+          value="{{ profile.bio }}"
+          placeholder="Short personal note"
+          maxlength="280"
+          style="width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;color:var(--text);background:var(--card);font-size:13px;"
+        >
+      </div>
+
+      <div class="field" style="margin-bottom:12px;">
+        <label for="accent_color" style="display:block;margin-bottom:6px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7e9c8c;">Accent colour</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input
+            type="color"
+            id="accent_color"
+            name="accent_color"
+            value="{{ profile.accent_color|default:'#b6ff3c' }}"
+            style="border:1px solid var(--border);border-radius:8px;padding:6px;background:var(--card);"
+          >          <span style="font-size:11px;color:var(--muted);">#<input
+            type="text"
+            name="accent_color_hex"
+            value="{{ profile.accent_color|default:'#b6ff3c'|slice:':7' }}"
+            style="width:70px;border:1px solid var(--border);border-radius:6px;padding:4px;background:var(--card);color:var(--text);font-size:11px;"
+          ></span>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:12px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);">
+          <input type="checkbox" name="auto_speak" {% if profile.auto_speak %}checked{% endif %} style="width:auto;">
+          Speak recognised signs automatically
+        </label>
+      </div>
+
+      <div class="field" style="margin-bottom:12px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);">
+          <input type="checkbox" name="auto_append" {% if profile.auto_append %}checked{% endif %} style="width:auto;">
+          Add recognised signs to my sentence automatically
+        </label>
+      </div>
+
+      <button type="submit" style="padding:10px 16px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text);font-size:13px;cursor:pointer;">
+        Save changes
+      </button>
+    </form>
+  </section>
+
+  <section class="app-card" style="padding:20px;margin-top:16px;">
+    <h2 style="margin-top:0;color:var(--text);font-size:16px;">Recognition history</h2>
+    <p class="page-sub" style="margin-top:0;">The signs you have recognised recently.</p>
+    <ul style="margin:0;padding-left:18px;">
+      {% for item in history %}
+        <li style="padding:8px 0;border-bottom:1px solid var(--border-soft);">
+          <strong>{{ item.label }}</strong>
+          <span style="color:var(--muted);font-size:12px;">
+            &nbsp;·&nbsp;
+            {% if item.gesture %}
+              {{ item.gesture.name }}
+            {% else %}
+              {{ item.label }}
+            {% endif %}
+            &nbsp;·&nbsp; {{ item.confidence|floatformat:0 }}% confidence
+            &nbsp;·&nbsp; {{ item.created_at|date:"M j, Y g:i a" }}
+          </span>
+        </li>
+      {% empty %}
+        <li style="color:var(--dim);font-size:13px;">No recognitions yet. Practice to build your history.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="app-card" style="padding:20px;margin-top:16px;">
+    <h2 style="margin-top:0;color:var(--text);font-size:16px;">Supported signs</h2>
+    <p class="page-sub" style="margin-top:0;">Gestures that have a trained recogniser.</p>
+    <ul style="margin:0;padding-left:18px;">
+      {% for g in gestures %}
+        <li style="padding:8px 0;border-bottom:1px solid var(--border-soft);">
+          <strong>{{ g.name }}</strong>
+          <span style="color:var(--muted);font-size:12px;">
+            &nbsp;·&nbsp; {{ g.meaning }}{% if g.example %} — {{ g.example }}{% endif %}
+          </span>
+        </li>
+      {% empty %}
+        <li style="color:var(--dim);font-size:13px;">No supported gestures yet.</li>
+      {% endfor %}
+    </ul>
+  </section>
+</main>
 {% endblock %}

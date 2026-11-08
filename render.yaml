@@ -3,15 +3,22 @@ services:
     name: viva-la-vida
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn config.wsgi:application
-    envVars:
+    startCommand: gunicorn config.wsgi:application      envVars:
       - key: PYTHON_VERSION
         value: 3.14
       - key: DJANGO_SECRET_KEY
         sync: false
+        displayName: Secret key (generates a random value if unset)
       - key: DJANGO_ALLOWED_HOSTS
         sync: false
+        displayName: Comma-separated hostnames (e.g. viva-la-vida-1.onrender.com)
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
         sync: false
+        displayName: Comma-separated CSRF-trusted origins
       - key: DJANGO_DATABASE_URL
         sync: false
+        displayName: PostgreSQL connection URL (onrender.com)
+      - key: RECOGNITION_MODEL_PATH
+        sync: false
+        displayName: Path to trained ISL recogniser, e.g. /app/staticfiles/recognition/model.pkl
+        description: Absolute path to the trained recogniser (see translator/recognition/train.py)
