@@ -13,4 +13,7 @@ urlpatterns = [
     path('practice/', views.practice, name='practice'),
     path('dictionary/', views.dictionary, name='dictionary'),
     path('profile/', views.profile, name='profile'),
+    path('profile/update/', views.profile_update, name='profile_update'),
+    path('api/dictionary/', views.dictionary_list, name='api_dictionary'),
+    path('api/recognize/', views.recognize, name='api_recognize'),
 ]

@@ -7,5 +7,133 @@
   <h1>Dictionary</h1>
   <p class="page-sub">Look up the signs you just learned.</p>
 </div>
-<p class="page-placeholder">Dictionary page — the illustrated ISL sign list appears here.</p>
+
+<section class="app-card" style="padding:16px;">
+  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search by name or meaning..."
+      style="padding:8px 10px;border:1px solid var(--border);border-radius:8px;color:var(--text);background:var(--card);font-size:13px;width:220px;"
+    >
+    <select id="category-filter" style="padding:8px;border:1px solid var(--border);border-radius:8px;color:var(--text);background:var(--card);font-size:13px;">
+      <option value="">All categories</option>
+      <option value="greetings">Greetings</option>
+      <option value="numbers">Numbers</option>
+      <option value="questions">Questions</option>
+      <option value="food">Food</option>
+      <option value="emotions">Emotions</option>
+      <option value="">All categories</option>
+      <option value="greetings">Greetings</option>
+      <option value="numbers">Numbers</option>
+      <option value="questions">Questions</option>
+      <option value="food">Food</option>
+      <option value="emotions">Emotions</option>
+      <option value="actions">Actions</option>
+    </select>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);">
+      <input type="checkbox" id="supported-only" style="width:auto;"> Supported only
+    </label>
+    <span id="gesture-count" style="font-size:12px;color:var(--muted);margin-left:auto;"></span>
+  </div>
+
+  <div id="gesture-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+    <div class="page-placeholder" style="grid-column:1/-1;padding:22px;">Loading gestures…</div>
+  </div>
+
+  <p id="no-results" style="display:none;color:var(--danger);">No gestures match your search.</p>
+</section>
+
+<script>
+(function () {
+  var searchInput = document.getElementById('search-input');
+  var categoryFilter = document.getElementById('category-filter');
+  var supportedOnly = document.getElementById('supported-only');    var listContainer = document.getElementById('gesture-list');
+  var noResults = document.getElementById('no-results');
+  var countEl = document.getElementById('gesture-count');
+
+  function escapeHtml(value) {
+    var div = document.createElement('div');
+    div.textContent = value;
+    return div.innerHTML;
+  }
+
+  function renderGesture(g) {
+    var supportedBadge = g.is_supported
+      ? '<span style="display:inline-block;padding:2px 8px;font-size:10px;color:#d7ffb0;background:rgba(182,255,60,0.12);border:1px solid rgba(182,255,60,0.22);border-radius:999px;">Recognised</span>'
+      : '<span style="display:inline-block;padding:2px 8px;font-size:10px;color:#ff8b8b;background:rgba(255,120,120,0.12);border:1px solid rgba(255,120,120,0.22);border-radius:999px;">Not yet trained</span>';
+    var demoBadge = g.is_demo
+      ? '<span style="display:inline-block;padding:2px 8px;font-size:10px;color:#ffaa44;background:rgba(255,170,68,0.12);border:1px solid rgba(255,170,68,0.22);border-radius:999px;">Demo placeholder</span>'
+      : '';
+    var item = document.createElement('div');
+    item.className = 'app-card';
+    item.style.cssText = 'padding:14px;min-width:0;';
+    item.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">' +
+        '<h3 style="margin:0;font-size:14px;">' + escapeHtml(g.name) + '</h3>' +
+        supportedBadge + demoBadge +
+      '</div>' +
+      '<p style="margin:6px 0 0;font-size:12px;color:var(--muted);"><strong>Meaning:</strong> ' + escapeHtml(g.meaning) + '</p>' +
+      (g.description
+        ? '<p style="margin:4px 0 0;font-size:12px;color:var(--dim);"><strong>Form:</strong> ' + escapeHtml(g.description) + '</p>'
+        : '') +
+      (g.example
+        ? '<p style="margin:4px 0 0;font-size:12px;color:var(--dim);"><strong>Example:</strong> ' + escapeHtml(g.example) + '</p>'
+        : '') +
+      (g.category
+        ? '<p style="margin:6px 0 0;font-size:10px;color:var(--dim);"><em>' + escapeHtml(g.category) + '</em></p>'
+        : '');
+    return item;
+  }
+
+  function filterGestures() {
+    var query = searchInput.value.trim().toLowerCase();
+    var category = categoryFilter.value;
+    var supportedOnlyChecked = supportedOnly.checked;
+
+    var gestures = window.__vivaLaVidaDictionary || { gestures: [] };
+    var results = gestures.gestures.filter(function (g) {
+      if (category && g.category !== category) return false;
+      if (supportedOnlyChecked && (!g.is_supported || g.is_demo)) return false;
+      if (query) {
+        if (!g.name.toLowerCase().includes(query)) return false;
+        if (!g.meaning.toLowerCase().includes(query)) return false;
+      }
+      return true;
+    });
+
+    if (!results.length) {
+      listContainer.innerHTML = '<div class="page-placeholder" style="grid-column:1/-1;padding:22px;">No gestures match.</div>';
+      noResults.style.display = 'block';
+      return;
+    }
+    noResults.style.display = 'none';
+    listContainer.innerHTML = results.map(renderGesture).join('');
+  }
+
+  searchInput.addEventListener('input', filterGestures);
+  categoryFilter.addEventListener('change', filterGestures);
+  supportedOnly.addEventListener('change', filterGestures);
+  filterGestures();
+
+  function load() {
+    fetch('/api/dictionary/?supported_only=1')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        window.__vivaLaVidaDictionary = data;
+        listContainer.innerHTML = '<div class="page-placeholder" style="grid-column:1/-1;padding:22px;">' + data.count + ' signs found. Type to search.</div>';
+        filterGestures();
+      })
+      .catch(function (err) {
+        listContainer.innerHTML = '<div class="page-placeholder" style="grid-column:1/-1;padding:22px;color:#ff8b8b;">Could not load gestures.</div>';
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', load);
+  } else {
+    load();
+  }
+})();
+</script>
 {% endblock %}
