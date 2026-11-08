@@ -58,15 +58,6 @@ INSTALLED_APPS = [
     'translator',
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
 ROOT_URLCONF = 'config.urls'
 
@@ -172,6 +163,25 @@ STATICFILES_DIRS = [
     BASE_DIR / 'translator/static',
 ]
 
+# WhiteNoise: serve static files directly from the WSGI app in production.
+# This lets Render serve CSS/JS/images/fonts even though it has no dedicated
+# static-file web server.
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+WHITENOISE_AUTOREFRESH = False
+WHITENOISE_MAX_AGE = 31536000  # 1 year, use content hashes
+
+
+# WhiteNoise middleware must be placed immediately after SecurityMiddleware.
+MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
 # Authentication redirects
 LOGIN_URL = 'translator:signin'
