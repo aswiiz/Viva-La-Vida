@@ -1,5 +1,7 @@
-Django>=5.0,<6.0
-gunicorn>=22.0
-whitenoise>=6.6
-dj-database-url>=2.1
-psycopg2-binary>=2.9.9
+#!/usr/bin/env bash
+set -o errexit
+export SECRET_KEY="${SECRET_KEY:-build-time-placeholder-not-used-at-runtime}"
+pip install --upgrade pip
+pip install -r requirements.txt
+python manage.py collectstatic --no-input
+python manage.py migrate --no-input
