@@ -4,6 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("ping/", views.ping, name="ping"),
     path("", views.home, name="home"),
     path("practice/", views.practice, name="practice"),
     path("dictionary/", views.dictionary, name="dictionary"),

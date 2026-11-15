@@ -1,35 +1,37 @@
 train samples 23040 (real recordings: 0)  |  test samples 5760 from 6 unseen simulated people
-accuracy on unseen simulated people: 98.1%
+accuracy on unseen simulated people: 98.07%
+macro precision: 97.97%  |  macro recall: 98.95%  |  macro F1: 98.45%
+weighted F1: 98.07%  |  log loss: 0.0635
 
-per-class recall / precision:
-  fist       recall 100.0%  precision  96.8%
-  fist_l     recall 100.0%  precision  97.6%
-  thumb_up   recall 100.0%  precision  98.0%
-  thumb_dn   recall  99.6%  precision  97.2%
-  one_up     recall  99.6%  precision  97.6%
-  one_dn     recall  99.6%  precision 100.0%
-  one_l      recall  99.6%  precision  99.2%
-  one_r      recall 100.0%  precision  98.4%
-  victory    recall  99.2%  precision  97.5%
-  cross      recall  99.2%  precision  97.1%
-  love       recall  99.6%  precision  98.4%
-  horns      recall  99.6%  precision  97.2%
-  call       recall 100.0%  precision  98.0%
-  three      recall 100.0%  precision  98.0%
-  four       recall  99.2%  precision  95.2%
-  palm       recall  96.2%  precision  97.5%
-  vulcan     recall  99.2%  precision  97.1%
-  left_hand  recall 100.0%  precision  98.8%
-  none       recall  93.9%  precision  99.2%
+per-class recall / precision / F1:
+  fist       recall  98.3%  precision  97.5%  F1  97.9%
+  fist_l     recall 100.0%  precision  98.0%  F1  99.0%
+  thumb_up   recall 100.0%  precision  98.4%  F1  99.2%
+  thumb_dn   recall  99.6%  precision  97.2%  F1  98.4%
+  one_up     recall  98.3%  precision  97.9%  F1  98.1%
+  one_dn     recall  99.6%  precision  98.8%  F1  99.2%
+  one_l      recall 100.0%  precision  98.4%  F1  99.2%
+  one_r      recall  99.6%  precision  98.4%  F1  99.0%
+  victory    recall  97.1%  precision  98.3%  F1  97.7%
+  cross      recall  99.2%  precision  96.4%  F1  97.7%
+  love       recall  98.8%  precision  99.6%  F1  99.2%
+  horns      recall  98.8%  precision  98.8%  F1  98.8%
+  call       recall 100.0%  precision  98.8%  F1  99.4%
+  three      recall  99.2%  precision  97.9%  F1  98.6%
+  four       recall 100.0%  precision  93.4%  F1  96.6%
+  palm       recall  97.9%  precision  98.3%  F1  98.1%
+  vulcan     recall  99.2%  precision  97.9%  F1  98.6%
+  left_hand  recall 100.0%  precision  99.2%  F1  99.6%
+  none       recall  94.7%  precision  98.6%  F1  96.6%
 
 most frequent confusions (true -> predicted):
-  none -> four: 12
-  none -> fist: 8
+  none -> four: 17
+  victory -> cross: 7
   none -> thumb_dn: 7
-  none -> horns: 7
-  palm -> vulcan: 6
-  none -> one_up: 6
-  none -> fist_l: 6
-  none -> thumb_up: 5
+  none -> fist: 6
+  palm -> vulcan: 5
+  none -> three: 5
+  none -> one_up: 5
+  none -> fist_l: 5
 
-when the model is >= 90% sure (93% of frames) it is right 99.3% of the time
+when the model is >= 90% sure (94.5% of frames) it is right 99.30% of the time

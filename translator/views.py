@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods, require_POST
@@ -18,6 +18,11 @@ from .signs import SIGN_IDS
 
 def _learned(user):
     return list(LearnedSign.objects.filter(user=user).values_list("sign_id", flat=True)) if user.is_authenticated else []
+
+
+def ping(request):
+    """Lightweight keep-alive ping endpoint to prevent web service from sleeping on Render."""
+    return JsonResponse({"status": "ok", "message": "pong"})
 
 
 class SignInView(LoginView):
@@ -38,11 +43,15 @@ def signup(request):
     return render(request, "translator/signup.html", {"form": form})
 
 
+@login_required
 def home(request):
+    """Home live translation page: requires authentication; unauthenticated visits redirect to /login/."""
     return render(request, "translator/home.html")
 
 
+@login_required
 def practice(request):
+    """Practice page: requires authentication."""
     return render(request, "translator/practice.html", {"learned": _learned(request.user)})
 
 
@@ -51,7 +60,9 @@ def collect(request):
     return render(request, "translator/collect.html")
 
 
+@login_required
 def dictionary(request):
+    """Dictionary page: requires authentication."""
     return render(request, "translator/dictionary.html")
 
 
