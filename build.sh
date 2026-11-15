@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Render build script: install, collect static files, create/upgrade database tables.
 set -o errexit
+export SECRET_KEY="${SECRET_KEY:-build-time-placeholder-not-used-at-runtime}"
 pip install --upgrade pip
 pip install -r requirements.txt
 python manage.py collectstatic --no-input
