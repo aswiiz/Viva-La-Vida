@@ -1,6 +1,7 @@
 # viva la vida – gesture translator (Django + Google AI Edge MediaPipe)
 
-    pip install -r requirements.txt
+    python -m venv venv && source venv/bin/activate
+    python -m pip install -r requirements.txt
     python manage.py migrate
     python manage.py runserver
 
@@ -42,3 +43,5 @@ Machine learning (`ml/`)
 - `pip install -r ml/requirements-ml.txt` (numpy, scikit-learn) – separate from the Django requirements.
 
 See `SIGNS.md` for the full list of signs and meanings.
+
+Deploying: see `DEPLOY.md` (Render: build `bash build.sh`, start `gunicorn vivalavida.wsgi:application`).
