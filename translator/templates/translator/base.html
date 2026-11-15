@@ -1,0 +1,57 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06100a">
+<title>{% block title %}viva la vida{% endblock %} · Sign Language Translator</title>
+<link rel="icon" href="{% static 'translator/img/logo.svg' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Sriracha&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'translator/css/style.css' %}">
+</head>
+<body data-auth="{% if user.is_authenticated %}1{% else %}0{% endif %}" data-csrf="{{ csrf_token }}" data-progress-url="{% url 'api_progress' %}" data-model-url="{% static 'translator/model/gesture_mlp.json' %}">
+{% with page=request.resolver_match.url_name %}
+<div id="msgs" hidden>{% for m in messages %}<span>{{ m }}</span>{% endfor %}</div>
+
+<div id="drawer" class="off">
+  <aside>
+    <div class="dh"><span class="script"><img src="{% static 'translator/img/logo.svg' %}" alt="">viva la vida</span><button id="closeD" data-i="x" aria-label="Close menu"></button></div>
+    <a class="mi {% if page == 'home' %}on{% endif %}" href="{% url 'home' %}" data-i="home"><span>Home<small>Live translation</small></span></a>
+    <a class="mi {% if page == 'practice' %}on{% endif %}" href="{% url 'practice' %}" data-i="hand"><span>Practice<small>Train your signs</small></span></a>
+    <a class="mi {% if page == 'dictionary' %}on{% endif %}" href="{% url 'dictionary' %}" data-i="book"><span>Dictionary<small>All supported signs</small></span></a>
+    <a class="mi {% if page == 'account' %}on{% endif %}" href="{% url 'account' %}" data-i="user"><span>Account<small>Your name &amp; progress</small></span></a>
+    <div class="sp"></div><div class="hr"></div>
+    <button class="mi s" id="mShare" data-i="share">Share app</button>
+    <button class="mi s" id="mHelp" data-i="help">Help &amp; tips</button>
+    <button class="mi s" id="mAbout" data-i="info">About</button>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="mi s" data-i="out">Sign out</button></form>
+    {% else %}
+    <a class="mi s" href="{% url 'login' %}" data-i="out">Sign in</a>
+    {% endif %}
+  </aside>
+  <div class="sh"></div>
+</div>
+
+<div id="app">
+  <header>
+    <button class="ib" id="menuBtn" data-i="menu" aria-label="Menu"></button>
+    <div><h1 class="script"><span>{% block heading %}viva la vida{% endblock %}</span><img src="{% static 'translator/img/logo.svg' %}" alt=""></h1><p>{% block sub %}Sign Language Translator{% endblock %}</p></div>
+    <button class="ib o" id="bell" data-i="bell" aria-label="Tips"><span class="dot"></span></button>
+  </header>
+  {% block content %}{% endblock %}
+</div>
+
+<nav class="bot">
+  <a href="{% url 'home' %}" data-i="home" class="{% if page == 'home' %}on{% endif %}">Home</a>
+  <a href="{% url 'practice' %}" data-i="hand" class="{% if page == 'practice' %}on{% endif %}">Practice</a>
+  <a href="{% url 'dictionary' %}" data-i="book" class="{% if page == 'dictionary' %}on{% endif %}">Dictionary</a>
+  <a href="{% url 'account' %}" data-i="user" class="{% if page == 'account' or page == 'password_change' %}on{% endif %}">Account</a>
+</nav>
+<div id="toast"></div>
+{% endwith %}
+<script type="module" src="{% static 'translator/js/common.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

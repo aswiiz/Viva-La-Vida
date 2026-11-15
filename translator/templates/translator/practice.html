@@ -1,0 +1,23 @@
+{% extends "translator/base.html" %}
+{% load static %}
+{% block title %}Practice{% endblock %}
+{% block heading %}Practice{% endblock %}
+{% block sub %}Copy the sign, hold it steady{% endblock %}
+{% block content %}
+<section>
+  <div class="card"><div class="sent"><span>Make this sign</span><span style="color:var(--g)" id="pStat"></span></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:8px"><span style="font-size:30px" id="pEm"></span><b style="font-size:20px" id="pName"></b></div>
+    <p style="color:var(--mut);font-size:14px;margin:6px 0" id="pHow"></p>
+    <div class="bar" style="height:6px"><i id="pbar"></i></div><small style="color:var(--mut);font-size:12px">Hold the sign steady for 2 seconds.</small></div>
+  <div class="card"><div class="stage" id="stage">
+    <canvas width="640" height="480"></canvas><div class="cd hidden"></div>
+    <div class="ph"><img src="{% static 'translator/img/logo.svg' %}" alt="">Allow camera access to practice — video never leaves your device.<br><button class="pill" id="startP" data-i="play">Start practice</button></div></div></div>
+  <div class="two"><button class="b-b" id="skipP" data-i="skip">Skip sign</button><button class="b-r" id="resetP" data-i="reset">Restart</button></div>
+  <div class="card"><small style="color:var(--mut)">Your practice set{% if not user.is_authenticated %} · <a href="{% url 'login' %}" style="color:var(--g)">sign in</a> to save progress to your account{% endif %}</small><div class="chips" id="pSet"></div></div>
+  <div class="card" id="dbgPanel" style="display:none"><div class="sec" style="margin:0 0 6px">Debug report (?debug=1)</div>
+    <pre id="dbgOut" style="white-space:pre-wrap;font-size:11px;margin:0;color:var(--mut)"></pre>
+    <button class="pill" id="dbgCopy" style="margin-top:10px">Copy report</button></div>
+</section>
+{{ learned|json_script:"learned-data" }}
+{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'translator/js/practice.js' %}"></script>{% endblock %}

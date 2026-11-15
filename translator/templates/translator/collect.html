@@ -1,0 +1,22 @@
+{% extends "translator/base.html" %}
+{% load static %}
+{% block title %}Collect data{% endblock %}
+{% block heading %}collect{% endblock %}
+{% block sub %}Record real samples to retrain the model{% endblock %}
+{% block content %}
+<section>
+  <div class="card"><div class="stage" id="stage">
+    <canvas width="640" height="480"></canvas><div class="cd hidden"></div>
+    <div class="ph"><img src="{% static 'translator/img/logo.svg' %}" alt="">Allow camera access — only 21 landmark numbers per frame are saved, never images.<br><button class="pill" id="startC" data-i="play">Enable camera</button></div></div>
+    <div class="det" style="margin-top:12px"><div style="flex:1"><small>Your name / ID (one per person)</small><input id="person" placeholder="e.g. anu" style="width:100%;background:#050c08;border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:10px;margin-top:6px"></div></div>
+    <div class="det"><span class="em" id="selE"></span><div><small>Sign to record (ONE hand in view)</small><b id="selN"></b></div><div class="cf"><small>Samples</small><b id="selC">0</b></div></div>
+    <p id="selHow" style="color:var(--mut);font-size:13px;margin:10px 2px 0"></p>
+    <button class="pill" id="recBtn" style="width:100%;justify-content:center;margin-top:12px" data-i="play">Record 40 samples</button>
+  </div>
+  <div class="card"><span style="color:var(--mut);font-size:13px;line-height:1.5">For every sign record <b>3+ times</b> (near / far / rotated slightly) and also record the <b>none</b> class: relaxed hand, half-formed signs, random gestures. Ask friends to record under their own ID. The two-hand sign 🙌 is built from open hands, so record the open hand as ✋ (palm).</span></div>
+  <div class="grid" id="tiles"></div>
+  <div class="two" style="margin-top:14px"><button class="b-g" id="exportBtn" data-i="share">Export JSON</button><button class="b-r" id="clearBtn" data-i="reset">Delete all</button></div>
+  <p style="color:var(--mut);font-size:12px">Put the exported file in <code>ml/data/real/</code> and run <code>python ml/train.py --real "data/real/*.json"</code>.</p>
+</section>
+{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'translator/js/collect.js' %}"></script>{% endblock %}

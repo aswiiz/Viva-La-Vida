@@ -1,0 +1,7 @@
+{% extends "translator/base.html" %}
+{% load static %}
+{% block title %}Dictionary{% endblock %}
+{% block heading %}dictionary{% endblock %}
+{% block sub %}Every sign you can translate{% endblock %}
+{% block content %}<section><div id="dictList"></div></section>{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'translator/js/dictionary.js' %}"></script>{% endblock %}

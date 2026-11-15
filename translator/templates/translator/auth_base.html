@@ -1,0 +1,38 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06100a">
+<title>{% block title %}{% endblock %} · viva la vida</title>
+<link rel="icon" href="{% static 'translator/img/logo.svg' %}">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Sriracha&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'translator/css/style.css' %}">
+</head>
+<body data-auth="0" data-csrf="{{ csrf_token }}">
+<div id="msgs" hidden>{% for m in messages %}<span>{{ m }}</span>{% endfor %}</div>
+<div id="auth"><div class="box">
+  <img class="lg" src="{% static 'translator/img/logo.svg' %}" alt="">
+  <h1 class="script">viva la vida</h1>
+  <div style="color:var(--mut);font-size:14px">{% block sub %}{% endblock %}</div>
+  <div class="tabs"><a href="{% url 'login' %}" class="{% block tabin %}{% endblock %}">Sign in</a><a href="{% url 'signup' %}" class="{% block tabup %}{% endblock %}">Sign up</a></div>
+  <form class="f" method="post" novalidate>
+    {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    {% if form.non_field_errors %}<div class="err">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+    {% for field in form %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+      {% if field.errors %}<div class="err">{{ field.errors|join:" " }}</div>{% endif %}
+    {% endfor %}
+    <button type="button" id="showPw" class="linkbtn">Show / hide password</button>
+    <button class="pill" type="submit">{% block submit %}{% endblock %}</button>
+    <a class="pill ghost" href="{% url 'home' %}">Continue as guest</a>
+    <div class="swap">{% block swap %}{% endblock %}</div>
+  </form>
+  <div class="fine">Camera frames are processed on your device only. Only your account and learning progress are stored.</div>
+</div></div>
+<div id="toast"></div>
+<script type="module" src="{% static 'translator/js/common.js' %}"></script>
+<script type="module" src="{% static 'translator/js/auth.js' %}"></script>
+</body>
+</html>

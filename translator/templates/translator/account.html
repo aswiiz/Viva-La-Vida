@@ -1,0 +1,22 @@
+{% extends "translator/base.html" %}
+{% load static %}
+{% block title %}Account{% endblock %}
+{% block heading %}account{% endblock %}
+{% block sub %}Your signing journey{% endblock %}
+{% block content %}
+<section>
+  <div class="card" style="text-align:center"><div class="ava"><img src="{% static 'translator/img/logo.svg' %}" alt=""></div>
+    <form method="post" class="name">{% csrf_token %}<input type="hidden" name="action" value="name">
+      <input name="name" maxlength="30" placeholder="Your name" value="{{ user.first_name }}"><button class="ck" data-i="check" aria-label="Save name"></button></form>
+    <p style="color:var(--mut);font-size:14px;margin:12px 0 0">@{{ user.username }} · joined {{ user.date_joined|date:"M Y" }}</p></div>
+  <div class="row2"><div class="stat b-g"><b>{{ sign_count }}</b>Signs available</div><div class="stat b-b"><b>{{ learned_count }}/{{ sign_count }}</b>Learned</div></div>
+  <div class="card"><div class="sec" style="margin:0 0 6px">Learned signs</div><div class="chips" id="learnedChips"></div></div>
+  <div class="card"><div class="sw" style="padding-top:0"><span>Speak words aloud<small>Text-to-speech when a sign is added</small></span><input type="checkbox" id="setSpeech"></div>
+    <a class="mi s" href="{% url 'password_change' %}" data-i="gear">Change password</a>
+    <form method="post" onsubmit="return confirm('Reset all learned signs?')">{% csrf_token %}<input type="hidden" name="action" value="reset"><button class="mi s" data-i="reset">Reset progress</button></form>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="mi s" data-i="out">Sign out</button></form></div>
+  <div class="card"><div class="sec" style="margin:0 0 6px">Privacy</div><span style="color:var(--mut);font-size:14px">Camera frames are processed on your device only. Only your account and learning progress are saved.</span></div>
+</section>
+{{ learned|json_script:"learned-data" }}
+{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'translator/js/account.js' %}"></script>{% endblock %}

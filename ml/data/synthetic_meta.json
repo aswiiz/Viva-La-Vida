@@ -1,0 +1,26 @@
+{
+ "classes": [
+  "fist",
+  "fist_l",
+  "thumb_up",
+  "thumb_dn",
+  "one_up",
+  "one_dn",
+  "one_l",
+  "one_r",
+  "victory",
+  "cross",
+  "love",
+  "horns",
+  "call",
+  "three",
+  "four",
+  "palm",
+  "vulcan",
+  "left_hand",
+  "none"
+ ],
+ "samples": 28800,
+ "persons": 30,
+ "features": 40
+}

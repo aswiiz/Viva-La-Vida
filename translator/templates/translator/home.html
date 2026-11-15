@@ -1,0 +1,24 @@
+{% extends "translator/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section>
+  <div class="card">
+    <div class="stage" id="stage">
+      <canvas width="640" height="480"></canvas><div class="cd hidden"></div>
+      <div class="ph"><img src="{% static 'translator/img/logo.svg' %}" alt="">Allow camera access so we can read your hand signs — video never leaves your device.<br>
+        <button class="pill" id="enableCam" data-i="play">Enable camera</button></div>
+    </div>
+    <div class="det"><span class="em" id="detE">🍉</span><div><small>Detected Sign</small><b id="detN">—</b></div>
+      <div class="cf"><small>Vote share</small><b id="conf">0%</b><div class="bar"><i id="confBar"></i></div></div></div>
+  </div>
+  <div class="card"><div class="sent"><span>Your Sentence</span><a id="clearAll">Clear all</a></div><div id="sentence"></div></div>
+  <div class="three">
+    <button class="b-g" id="speakBtn" data-i="vol">Speak<small>(Text-to-Speech)</small></button>
+    <button class="b-r" id="clearTxt" data-i="hand">Clear Text</button>
+    <button class="b-b" id="pauseBtn" data-i="pause"><span>Pause Camera</span></button>
+  </div>
+  <div class="card tips"><div><h3>Tips</h3><p>Keep your hand within the frame. Try Hello ✊, 🖖, 👍 or both hands up 🙌. Hold each sign steady for 2 s to add it; release or change pose to repeat.</p></div><img src="{% static 'translator/img/logo.svg' %}" alt=""></div>
+</section>
+{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'translator/js/home.js' %}"></script>{% endblock %}
